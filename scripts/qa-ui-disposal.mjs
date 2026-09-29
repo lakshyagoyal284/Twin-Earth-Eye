@@ -25,12 +25,12 @@ try {
   );
   await page.waitForFunction(
     () =>
-      window.__godsEyeView?.styleManager?._dataManager &&
+      window.__twinEarth?.styleManager?._dataManager &&
       document.getElementById('loading-screen')?.classList.contains('hidden'),
     { timeout: 60000 },
   );
   const result = await page.evaluate(async () => {
-    const ui = window.__godsEyeView.styleManager;
+    const ui = window.__twinEarth.styleManager;
     const counts = {};
     document.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -128,7 +128,7 @@ try {
     setSplitFlapText(feedbackLabel, 'CHECKING LIVE DATA');
     setSplitFlapText(feedbackLabel, 'LOAD COMPLETE');
     const permanentText =
-      feedbackLabel.querySelector('.gev-flap-text')?.firstChild;
+      feedbackLabel.querySelector('.te-flap-text')?.firstChild;
     let stateNotifications = 0;
     ui.subscribeShareState(() => stateNotifications++, { emitCurrent: false });
     ui.subscribeLocationSearch(() => stateNotifications++, {
@@ -209,11 +209,11 @@ try {
           ui._cctvControls.destroyed,
         feedbackTextPreserved:
           permanentText?.nodeType === Node.TEXT_NODE &&
-          feedbackLabel.querySelector('.gev-flap-text')?.firstChild ===
+          feedbackLabel.querySelector('.te-flap-text')?.firstChild ===
             permanentText &&
           permanentText.data === 'LOAD COMPLETE' &&
-          !feedbackLabel.classList.contains('gev-flap-active') &&
-          feedbackLabel.querySelector('.gev-flap-cells')?.childNodes.length ===
+          !feedbackLabel.classList.contains('te-flap-active') &&
+          feedbackLabel.querySelector('.te-flap-cells')?.childNodes.length ===
             0,
         shellWorkReleased:
           ui._lifetime.destroyed &&

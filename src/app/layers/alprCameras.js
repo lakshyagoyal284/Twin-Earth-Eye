@@ -21,9 +21,9 @@ export function createApplicationAlpr({ surface, source }) {
         keyholeAlpha: keyholeLabelAlphaFromGeometry,
         refreshReadout: refreshTrackedReadout,
         subscribeMapStack(callback) {
-          window.addEventListener('gev:map-stack-changed', callback);
+          window.addEventListener('te:map-stack-changed', callback);
           return () =>
-            window.removeEventListener('gev:map-stack-changed', callback);
+            window.removeEventListener('te:map-stack-changed', callback);
         },
       },
     },

@@ -3,7 +3,7 @@ import { isPointerFree } from '../../data/inputOwnership.js';
 
 export function createInteraction({ state, screenSpaceEventHandlerFactory }) {
   function registerPickEntity(entity, info) {
-    entity.__gevTeleGeography = info;
+    entity.__teTeleGeography = info;
     state._pickByEntity.set(entity, info);
   }
 
@@ -27,7 +27,7 @@ export function createInteraction({ state, screenSpaceEventHandlerFactory }) {
     if (primitive) {
       const primitiveInfo = state._pickByEntity.get(primitive);
       if (primitiveInfo) return primitiveInfo;
-      if (primitive.__gevTeleGeography) return primitive.__gevTeleGeography;
+      if (primitive.__teTeleGeography) return primitive.__teTeleGeography;
       if (
         primitive.id &&
         typeof primitive.id === 'object' &&
@@ -41,7 +41,7 @@ export function createInteraction({ state, screenSpaceEventHandlerFactory }) {
     if (entity) {
       const entityInfo = state._pickByEntity.get(entity);
       if (entityInfo) return entityInfo;
-      if (entity.__gevTeleGeography) return entity.__gevTeleGeography;
+      if (entity.__teTeleGeography) return entity.__teTeleGeography;
       if (entity.id && typeof entity.id === 'object' && entity.id.reference) {
         return entity.id;
       }

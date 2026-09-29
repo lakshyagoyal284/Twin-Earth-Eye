@@ -1,7 +1,7 @@
 import { SceneDirector } from '../scenes/director.js';
 import { initAnnotations } from '../annotations/index.js';
 import { initDrawTool } from '../annotations/drawTool.js';
-import { initGevVoiceCommands } from '../voice/gevRealtime.js';
+import { initTeVoiceCommands } from '../voice/teRealtime.js';
 import { installScopeMask, destroyScopeMask } from '../scopeMask.js';
 import {
   installRenderGovernor,
@@ -45,7 +45,7 @@ export function createApplicationTools({
     resolver: operations.annotationResolver,
   });
   defer(() => {
-    if (window.__gevAnnotations === annotations) delete window.__gevAnnotations;
+    if (window.__teAnnotations === annotations) delete window.__teAnnotations;
     annotations.destroy();
   });
   // DISPLAY ▸ Draw: the same whiteboard, drawn by hand. It claims the pointer
@@ -100,7 +100,7 @@ export function createApplicationTools({
   // loop burning behind a hidden tab. (perf wave 2 fix)
   syncVisibilitySuspension();
 
-  window.__godsEyeView = {
+  window.__twinEarth = {
     viewer,
     styleManager,
     tileset,
@@ -114,11 +114,11 @@ export function createApplicationTools({
     surfaceServices: operations.surface,
     requestRender: governorRequestRender,
   };
-  const debug = window.__godsEyeView;
+  const debug = window.__twinEarth;
   defer(() => {
-    if (window.__godsEyeView === debug) delete window.__godsEyeView;
+    if (window.__twinEarth === debug) delete window.__twinEarth;
   });
-  const voiceCommands = initGevVoiceCommands({
+  const voiceCommands = initTeVoiceCommands({
     ...voice,
     floorServices: operations.surface.groundFloor,
     annotationResolver: operations.annotationResolver,
@@ -133,8 +133,8 @@ export function createApplicationTools({
   });
   defer(() => {
     voiceCommands.stop({ removeUi: true });
-    if (window.__gevVoiceCommands === voiceCommands)
-      delete window.__gevVoiceCommands;
+    if (window.__teVoiceCommands === voiceCommands)
+      delete window.__teVoiceCommands;
   });
   debug.voiceCommands = voiceCommands;
   return { sceneDirector, annotations, voiceCommands };

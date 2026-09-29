@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { GevRealtimeController } from './realtimeController.js';
+import { TeRealtimeController } from './realtimeController.js';
 import { RealtimeInput } from './realtimeInput.js';
 import { RealtimeViewport } from './realtimeViewport.js';
 import { resolveVoiceModel } from './voiceCost.js';
@@ -53,7 +53,7 @@ function browser(t) {
 test('retained peer and channel callbacks cannot act after stop or enter a replacement session', async (t) => {
   const { peers, streams } = browser(t);
   const actions = [];
-  const controller = new GevRealtimeController({
+  const controller = new TeRealtimeController({
     runner: async (name) => { actions.push(name); return { ok: true }; },
     backend: {
       async requestToken() { return { token: 'synthetic', model: resolveVoiceModel('mini').id }; },
@@ -99,7 +99,7 @@ test('an offer resolved after restart cannot change the replacement peer descrip
     if (peers.indexOf(this) === 0) return new Promise(resolve => { finishOldOffer = resolve; });
     return originalOffer.call(this);
   };
-  const controller = new GevRealtimeController({
+  const controller = new TeRealtimeController({
     runner: async () => ({ ok: true }),
     backend: {
       async requestToken() { return { token: 'synthetic', model: resolveVoiceModel('mini').id }; },
@@ -223,7 +223,7 @@ test('late action or viewport completion cannot resume a stopped or replacement 
   for (const phase of ['tool', 'tool-error', 'viewport']) {
     for (const restart of [false, true]) {
       let finish;
-      const controller = new GevRealtimeController({
+      const controller = new TeRealtimeController({
         runner: phase === 'viewport'
           ? async () => ({ ok: true, ...localContext })
           : () => new Promise((resolve, reject) => {

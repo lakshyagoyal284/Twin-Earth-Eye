@@ -38,16 +38,16 @@ export function createLifecycle({
   function attachRuntimeListeners() {
     if (layerState.runtimeListenersAttached || !layerState.viewer) return;
     window.addEventListener(
-      'gev:awareness-subject-selected',
+      'te:awareness-subject-selected',
       layerState.subjectListener,
     );
-    window.addEventListener('gev:entity-selected', layerState.contextListener);
+    window.addEventListener('te:entity-selected', layerState.contextListener);
     window.addEventListener(
-      'gev:entity-selection-cleared',
+      'te:entity-selection-cleared',
       layerState.clearListener,
     );
     window.addEventListener(
-      'gev:awareness-subject-cleared',
+      'te:awareness-subject-cleared',
       layerState.subjectClearListener,
     );
     layerState.preRenderRemover =
@@ -93,19 +93,19 @@ export function createLifecycle({
   function detachRuntimeListeners() {
     if (layerState.runtimeListenersAttached) {
       window.removeEventListener(
-        'gev:awareness-subject-selected',
+        'te:awareness-subject-selected',
         layerState.subjectListener,
       );
       window.removeEventListener(
-        'gev:entity-selected',
+        'te:entity-selected',
         layerState.contextListener,
       );
       window.removeEventListener(
-        'gev:entity-selection-cleared',
+        'te:entity-selection-cleared',
         layerState.clearListener,
       );
       window.removeEventListener(
-        'gev:awareness-subject-cleared',
+        'te:awareness-subject-cleared',
         layerState.subjectClearListener,
       );
     }

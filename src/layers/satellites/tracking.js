@@ -119,7 +119,7 @@ export function createTracking({ state: layerState, services, parts, source }) {
     parts.labels._syncIssOverlay();
     clearTrackedSubjectContext('satellites');
     layerState._contextRefreshedAtMs = 0;
-    _emitAwarenessEvent('gev:awareness-subject-cleared', {
+    _emitAwarenessEvent('te:awareness-subject-cleared', {
       layerId: 'satellites',
       id: clearedNorad,
       origin,
@@ -372,7 +372,7 @@ export function createTracking({ state: layerState, services, parts, source }) {
         `DOCKED · ${companions[0]}${extra > 0 ? ` · +${extra}` : ''}`,
       );
     }
-    const current = layerState._trackedEntity.gevLabelModel;
+    const current = layerState._trackedEntity.teLabelModel;
     // Compare the WHOLE detail array: comparing only `details[0]` swallowed any
     // change confined to the companions line, so the card would never republish.
     const unchanged =
@@ -380,7 +380,7 @@ export function createTracking({ state: layerState, services, parts, source }) {
       current?.details?.length === details.length &&
       details.every((line, index) => current.details[index] === line);
     if (unchanged) return;
-    layerState._trackedEntity.gevLabelModel = {
+    layerState._trackedEntity.teLabelModel = {
       title,
       details,
       accent: '#ffd84d',
@@ -444,12 +444,12 @@ export function createTracking({ state: layerState, services, parts, source }) {
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },
     });
-    layerState._trackedEntity.gevSelectionOrigin = origin;
-    layerState._trackedEntity.gevTrackedId = `satellites:${noradId}`;
-    layerState._trackedEntity.gevDisplayPosition = _trackedDisplayCached;
+    layerState._trackedEntity.teSelectionOrigin = origin;
+    layerState._trackedEntity.teTrackedId = `satellites:${noradId}`;
+    layerState._trackedEntity.teDisplayPosition = _trackedDisplayCached;
     _updateTrackedSatelliteLabelModel(initialPos?.altitude ?? null);
 
-    _emitAwarenessEvent('gev:awareness-subject-selected', {
+    _emitAwarenessEvent('te:awareness-subject-selected', {
       layerId: 'satellites',
       id: noradId,
       label: name,

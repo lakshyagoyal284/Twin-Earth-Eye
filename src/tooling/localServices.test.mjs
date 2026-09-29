@@ -10,16 +10,16 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { overpassProxy } from 'gods-eye-view/server/providers/overpass';
-import { militaryInstallationsProxy } from 'gods-eye-view/server/providers/military-installations';
+import { overpassProxy } from 'twin-earth/server/providers/overpass';
+import { militaryInstallationsProxy } from 'twin-earth/server/providers/military-installations';
 import {
   regionalBriefProxy,
   weatherEffectsProxy,
-} from 'gods-eye-view/server/providers/regional';
-import { openAiRealtimeProxy } from 'gods-eye-view/server/providers/openai';
-import { keySetupEndpoint } from 'gods-eye-view/server/standalone/key-setup';
+} from 'twin-earth/server/providers/regional';
+import { openAiRealtimeProxy } from 'twin-earth/server/providers/openai';
+import { keySetupEndpoint } from 'twin-earth/server/standalone/key-setup';
 import { realtimeInstructions } from '../../server/providers/openai/instructions.js';
-import { GEV_REALTIME_TOOLS } from '../../server/providers/openai/tools.js';
+import { TE_REALTIME_TOOLS } from '../../server/providers/openai/tools.js';
 
 function install(plugin, preview = false) {
   const routes = new Map();
@@ -82,7 +82,7 @@ function env(t, name, value) {
   });
 }
 function root(t) {
-  const dir = mkdtempSync(path.join(tmpdir(), 'gev-services-'));
+  const dir = mkdtempSync(path.join(tmpdir(), 'te-services-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
   return dir;
 }
@@ -157,7 +157,7 @@ test('weather-only requests share upstream work and retain fresh and stale respo
 
 test('Realtime handler preserves tools and default instructions, isolates supplied annotation guidance, and keeps the upstream key server-side', async (t) => {
   env(t, 'OPENAI_API_KEY', 'fixture-upstream-secret');
-  env(t, 'GEV_RATELIMIT_OPENAI_PER_MIN', undefined);
+  env(t, 'TE_RATELIMIT_OPENAI_PER_MIN', undefined);
   const sent = [];
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     assert.equal(url, 'https://api.openai.com/v1/realtime/client_secrets');
@@ -181,14 +181,14 @@ test('Realtime handler preserves tools and default instructions, isolates suppli
       { url: '/?tier=unknown' },
     );
     assert.equal(response.status, 200);
-    assert.equal(response.headers['x-gev-voice-tier'], 'standard');
-    assert.equal(response.headers['x-gev-voice-tier-fallback'], '1');
+    assert.equal(response.headers['x-te-voice-tier'], 'standard');
+    assert.equal(response.headers['x-te-voice-tier-fallback'], '1');
     assert.equal(response.body.includes('fixture-upstream-secret'), false);
     assert.equal(
       sent.at(-1).session.instructions,
       realtimeInstructions(guidance),
     );
-    assert.deepEqual(sent.at(-1).session.tools, GEV_REALTIME_TOOLS);
+    assert.deepEqual(sent.at(-1).session.tools, TE_REALTIME_TOOLS);
   }
   assert.notEqual(sent[0].session.instructions, sent[1].session.instructions);
   assert.equal(sent[0].session.instructions, sent[2].session.instructions);
@@ -215,7 +215,7 @@ test('debug logging resolves each supplied application directory independently',
     );
     const file = path.join(
       sourceRoot,
-      '.gev-logs/realtime-conversations.jsonl',
+      '.te-logs/realtime-conversations.jsonl',
     );
     assert.equal(JSON.parse(readFileSync(file, 'utf8')).marker, marker);
   }
@@ -269,7 +269,7 @@ test('Realtime service configuration selects compatible endpoint/model without f
           assert.equal(options.headers.Authorization, 'Bearer server-fixture');
           const payload = JSON.parse(options.body);
           assert.equal(payload.session.model, 'configured-model');
-          assert.deepEqual(payload.session.tools, GEV_REALTIME_TOOLS);
+          assert.deepEqual(payload.session.tools, TE_REALTIME_TOOLS);
           return Response.json({ value: 'short-lived-fixture' });
         },
       },
@@ -279,7 +279,7 @@ test('Realtime service configuration selects compatible endpoint/model without f
     url: '/?tier=arbitrary-model&model=other',
   });
   assert.equal(response.status, 200);
-  assert.equal(response.headers['x-gev-voice-model'], 'configured-model');
+  assert.equal(response.headers['x-te-voice-model'], 'configured-model');
   assert.equal(response.headers['cache-control'], 'no-store');
   assert.doesNotMatch(response.body, /server-fixture|voice\.example/);
 });

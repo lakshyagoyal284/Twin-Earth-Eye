@@ -33,27 +33,27 @@ export function createAlprOverlay({ state, services }) {
     const billboard = entity.billboard;
     // Keep a faint native pick target under the canvas badge so sibling layer
     // handlers recognize ALPR ownership instead of treating the click as empty.
-    if (!visible && !entity.gevAlprNativeAppearance) {
-      entity.gevAlprNativeAppearance = {
+    if (!visible && !entity.teAlprNativeAppearance) {
+      entity.teAlprNativeAppearance = {
         position: entity.position,
         heightReference: billboard.heightReference,
         scaleByDistance: billboard.scaleByDistance,
         color: billboard.color,
       };
-      entity.position = entity.gevAlprCanvasPosition;
-      entity.gevAlprPickPosition = entity.position;
+      entity.position = entity.teAlprCanvasPosition;
+      entity.teAlprPickPosition = entity.position;
       billboard.heightReference = Cesium.HeightReference.NONE;
       billboard.scaleByDistance = undefined;
       billboard.color = Cesium.Color.WHITE.withAlpha(0.01);
-    } else if (visible && entity.gevAlprNativeAppearance) {
-      const saved = entity.gevAlprNativeAppearance;
-      if (entity.position === entity.gevAlprPickPosition)
+    } else if (visible && entity.teAlprNativeAppearance) {
+      const saved = entity.teAlprNativeAppearance;
+      if (entity.position === entity.teAlprPickPosition)
         entity.position = saved.position;
       billboard.heightReference = saved.heightReference;
       billboard.scaleByDistance = saved.scaleByDistance;
       billboard.color = saved.color;
-      entity.gevAlprNativeAppearance = null;
-      entity.gevAlprPickPosition = null;
+      entity.teAlprNativeAppearance = null;
+      entity.teAlprPickPosition = null;
     }
     billboard.show = visible;
     if (entity.polyline) entity.polyline.show = visible;
@@ -62,9 +62,9 @@ export function createAlprOverlay({ state, services }) {
 
   function resetAnchors() {
     for (const entity of state.dataSource.entities.values) {
-      entity.gevAlprCanvasPosition = null;
-      entity.gevAlprWedge = null;
-      entity.gevAlprDisplayPosition = null;
+      entity.teAlprCanvasPosition = null;
+      entity.teAlprWedge = null;
+      entity.teAlprDisplayPosition = null;
       nativeVisible(entity, true);
     }
     state.lastAnchorSampleAt = 0;
@@ -73,7 +73,7 @@ export function createAlprOverlay({ state, services }) {
   }
 
   function anchorFor(record, entity) {
-    if (entity.gevAlprCanvasPosition) return entity.gevAlprCanvasPosition;
+    if (entity.teAlprCanvasPosition) return entity.teAlprCanvasPosition;
     const scene = state.viewer.scene;
     const location = Cesium.Cartographic.fromDegrees(
       record.longitude,
@@ -95,13 +95,13 @@ export function createAlprOverlay({ state, services }) {
         record.longitude,
       );
     if (!validAlprGroundHeight(height)) return null;
-    entity.gevAlprCanvasPosition = Cesium.Cartesian3.fromDegrees(
+    entity.teAlprCanvasPosition = Cesium.Cartesian3.fromDegrees(
       record.longitude,
       record.latitude,
       height,
     );
-    entity.gevAlprWedge = directionWedgePositions(record, height);
-    return entity.gevAlprCanvasPosition;
+    entity.teAlprWedge = directionWedgePositions(record, height);
+    return entity.teAlprCanvasPosition;
   }
 
   function paint({ ctx, width, height, keyhole, occluder }) {
@@ -139,7 +139,7 @@ export function createAlprOverlay({ state, services }) {
       const alpha =
         services.overlays.keyholeAlpha?.(origin.x, origin.y, keyhole) ?? 1;
       if (!(alpha > 0)) continue;
-      const wedge = entity.gevAlprWedge;
+      const wedge = entity.teAlprWedge;
       if (wedge) {
         const left = Cesium.SceneTransforms.worldToWindowCoordinates(
           scene,
@@ -165,7 +165,7 @@ export function createAlprOverlay({ state, services }) {
         continue;
       entity.billboard.show = true;
       painted.push({ record, origin, selected, image, alpha });
-      if (selected) entity.gevAlprDisplayPosition = anchor;
+      if (selected) entity.teAlprDisplayPosition = anchor;
     }
     // Paint all glyphs after the wedges so one camera's cone cannot wash out another.
     for (const { record, origin, selected, image, alpha } of painted) {

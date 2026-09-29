@@ -12,7 +12,7 @@ import {
   OPENAI_REALTIME_CONTEXT_RETENTION_DEFAULT,
 } from './constants.js';
 import { realtimeInstructions } from './instructions.js';
-import { GEV_REALTIME_TOOLS } from './tools.js';
+import { TE_REALTIME_TOOLS } from './tools.js';
 
 function createRealtimeTokenHandler({
   annotationGuidance,
@@ -30,7 +30,7 @@ function createRealtimeTokenHandler({
       return;
     }
 
-    // Opt-in per-IP throttle (GEV_RATELIMIT_OPENAI_PER_MIN). No-op when unset.
+    // Opt-in per-IP throttle (TE_RATELIMIT_OPENAI_PER_MIN). No-op when unset.
     if (!enforceOptInRateLimit(openAiRateLimiter(), req, res)) return;
 
     const apiKey = resolveApiKey();
@@ -113,7 +113,7 @@ function createRealtimeTokenHandler({
           output: { voice },
         },
         instructions: realtimeInstructions(annotationGuidance),
-        tools: GEV_REALTIME_TOOLS,
+        tools: TE_REALTIME_TOOLS,
         tool_choice: 'auto',
       },
     };
@@ -126,7 +126,7 @@ function createRealtimeTokenHandler({
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-          'OpenAI-Safety-Identifier': 'gev-local-dev',
+          'OpenAI-Safety-Identifier': 'te-local-dev',
         },
         body: JSON.stringify(sessionConfig),
       });
@@ -140,10 +140,10 @@ function createRealtimeTokenHandler({
       // body is passed through untouched (the client parses it verbatim), so
       // these headers are the authoritative echo — including the case where a
       // bogus ?tier= was silently downgraded to standard.
-      res.setHeader('X-GEV-Voice-Tier', tier);
-      res.setHeader('X-GEV-Voice-Model', model);
+      res.setHeader('X-TE-Voice-Tier', tier);
+      res.setHeader('X-TE-Voice-Model', model);
       if (requestedTier && !isKnownVoiceTier(requestedTier)) {
-        res.setHeader('X-GEV-Voice-Tier-Fallback', '1');
+        res.setHeader('X-TE-Voice-Tier-Fallback', '1');
       }
       res.end(body);
     } catch (error) {

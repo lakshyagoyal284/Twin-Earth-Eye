@@ -52,10 +52,10 @@ export function createRealtimeBackend({
       return {
         token,
         model:
-          response.headers?.get?.('X-GEV-Voice-Model') ||
+          response.headers?.get?.('X-TE-Voice-Model') ||
           data?.session?.model ||
           null,
-        tier: response.headers?.get?.('X-GEV-Voice-Tier') || null,
+        tier: response.headers?.get?.('X-TE-Voice-Tier') || null,
         expiresAt,
       };
     },

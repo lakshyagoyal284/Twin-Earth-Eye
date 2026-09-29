@@ -109,9 +109,9 @@ export function createRendering({
             }
           : undefined,
       });
-      entity.gevTrackedId = `installations:${record.id}`;
-      entity.gevDisplayPosition = () => displayPosition;
-      entity.gevLabelModel = {
+      entity.teTrackedId = `installations:${record.id}`;
+      entity.teDisplayPosition = () => displayPosition;
+      entity.teLabelModel = {
         title: record.name || 'MAPPED INSTALLATION',
         details: [
           String(record.class || 'installation')

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRealtimeBackend } from './realtimeBackend.js';
-import { GevRealtimeController } from './realtimeController.js';
+import { TeRealtimeController } from './realtimeController.js';
 
 const tokenReply = () =>
   Response.json({
@@ -111,7 +111,7 @@ test('cancellation rejects late token and SDP bodies without promoting a stopped
 test('controller lifetime stops pending transport and releases resources through normal teardown', () => {
   const lifetime = new AbortController();
   let stopped = 0;
-  const controller = new GevRealtimeController({
+  const controller = new TeRealtimeController({
     runner: async () => ({}),
     signal: lifetime.signal,
     debugSink: null,

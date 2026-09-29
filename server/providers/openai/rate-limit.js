@@ -11,7 +11,7 @@ let _openAiRateLimiter;
 function openAiRateLimiter() {
   if (_openAiRateLimiter === undefined)
     _openAiRateLimiter = makeOptInRateLimiter(
-      process.env.GEV_RATELIMIT_OPENAI_PER_MIN,
+      process.env.TE_RATELIMIT_OPENAI_PER_MIN,
     );
   return _openAiRateLimiter;
 }

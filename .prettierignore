@@ -1,6 +1,6 @@
 dist
-.gev-cache
-.gev-logs
+.te-cache
+.te-logs
 screenshots
 qa-shots
 output

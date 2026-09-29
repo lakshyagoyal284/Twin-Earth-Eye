@@ -31,7 +31,7 @@ function install(plugin, hook = 'configureServer') {
 }
 
 function fixture(t, id) {
-  const root = mkdtempSync(path.join(tmpdir(), 'gev-cctv-'));
+  const root = mkdtempSync(path.join(tmpdir(), 'te-cctv-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   mkdirSync(path.join(root, 'config'));
   writeFileSync(
